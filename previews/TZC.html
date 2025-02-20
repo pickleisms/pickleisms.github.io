@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="icon" type="image/png" href="/sets/TZC-files/icon.png"/>
+	<link rel="stylesheet" href="/resources/header.css">
+	<title>TZC visual preview</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			overscroll-behavior: none;
+			background-size: cover;
+			background-attachment: fixed;
+		}
+		.main-content {
+			position: relative;
+			width: 100%;
+			float: left;
+			z-index: 2;
+			justify-items: center;
+		}
+		.sidebar {
+			position: sticky;
+			top: 0;
+			display: none;
+			text-align: center;
+			padding-right: 3%;
+			z-index: 1;
+			justify-items: center;
+		}
+		.sidebar-container {
+			width: 80%;
+			max-width: 375px;
+			position: relative;
+		}
+		.sidebar-h-img {
+			display: none;
+			transform: rotate(90deg);
+			position: absolute;
+			left: 10%;
+			top: 10%;
+			width: 85%;
+		}
+		.sidebar-img {
+			vertical-align: middle;
+			width: 100%;
+		}
+		.close-btn {
+			background: url('/img/close.png') no-repeat;
+			background-size: contain;
+			background-position: center;
+			width: 10%;
+			height: 10%;
+			border: none;
+			cursor: pointer;
+			position: absolute;
+			right: 4%;
+		}
+		.close-btn:hover {
+			background: url('/img/close-hover.png') no-repeat;
+			background-size: contain;
+			background-position: center;
+		}
+		.grid-container {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+			gap: 2px;
+			padding-left: 5%;
+			padding-right: 5%;
+			padding-bottom: 3%;
+			justify-items: center;
+			max-width: 1200px;
+		}
+		.grid-container img {
+			width: 100%;
+			height: auto;
+			display: block;
+			visibility: hidden;
+			cursor: pointer;
+		}
+		.banner {
+			width: 100%;
+			height: auto;
+			padding-top: 20px;
+			padding-bottom: 50px;
+		}
+		.logo {
+			display: block;
+			margin: auto;
+			max-width: 30%;
+			max-height: 320px;
+		}
+		.container {
+			position: relative;
+			width: 100%;
+		}
+		.container img {
+			width: 100%;
+			height: auto;
+		}
+		.flip-btn {
+			background: url('/img/flip.png') no-repeat;
+			background-size: contain;
+			background-position: center;
+			width: 15%;
+			height: 11%;
+			cursor: pointer;
+			border: none;
+			position: absolute;
+			left: 50%;
+			top: 48%;
+			transform: translate(-50%, -50%);
+			opacity: 0.5;
+		}
+		.flip-btn:hover {
+			background: url('/img/flip-hover.png') no-repeat;
+			background-size: contain;
+			background-position: center;
+		}
+		.icon-bar {
+			display: grid;
+			grid-template-columns: repeat(10, 3fr 2fr) 3fr;
+			gap: 1px;
+			padding-left: 5%;
+			padding-right: 5%;
+			padding-top: 2%;
+			padding-bottom: 1%;
+			justify-items: center;
+			align-items: center;
+		}
+		.icon-bar .icon img {
+			width: 90%;
+			max-width: 80px;
+			height: auto;
+			display: block;
+			padding: 5%;
+			margin: auto;
+			text-align: center;
+		}
+		.icon-bar .dot img {
+			width: 50%;
+			max-width: 65px;
+			height: auto;
+			display: block;
+			margin: auto;
+			text-align: center;
+		}
+		.preload-hidden {
+			display: none;
+		}
+		/* This is here to enable the stickiness in a Float environment. I don't know why it works but it does */
+		.footer {
+			clear: both;
+		}
+	</style>
+</head>
+<body>
+	<img class="preload-hidden" src="/img/dot.png" />
+	<img class="preload-hidden" src="/sets/TZC-files/logo.png" />
+	<img class="preload-hidden" src="/sets/CAL-files/icon.png" />
+		<img class="preload-hidden" src="/sets/TZC-files/icon.png" />
+		<div class="header">
+		<div class="search-grid">
+			<a href="/"><img class="sg-logo" src="/img/banner.png"></a>
+			<img class="sg-icon" src="/img/search.png">
+			<input type="text" inputmode="search" placeholder="Search ..." name="search" id="search" spellcheck="false" autocomplete="off" autocorrect="off" spellcheck="false">
+			<a href="/all-sets"><img src="/img/sets.png" class="sg-icon">Sets</a>
+			<a href="/deckbuilder"><img src="/img/deck.png" class="sg-icon">Deckbuilder</a>
+			<a onclick="randomCard()"><img src="/img/random.png" class="sg-icon">Random</a>
+		</div>
+	</div>
+
+	<div class="icon-bar">
+			<div class="icon"><a href="CAL"><img src="/sets/CAL-files/icon.png"></img></a></div>
+		 <div class="dot"><img src="/img/dot.png"></img></div>
+		<div class="icon"><a href="TZC"><img src="/sets/TZC-files/icon.png"></img></a></div>
+
+		</div>
+		<div class="banner">
+		<img class="logo" src="/sets/TZC-files/logo.png">
+		</div>
+		<div class="main-content" id="main-content">
+			<div class="grid-container">
+				<div class="container"><img alt="/sets/TZC-files/img/31_Patroklos Solakis.png" id="31_Patroklos Solakis" data-flag="@X" onclick="openSidebar('31_Patroklos Solakis',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/63_Paradox Engine.png" id="63_Paradox Engine" data-flag="@X" onclick="openSidebar('63_Paradox Engine',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/113_Seek the Lodestone.png" id="113_Seek the Lodestone" data-flag="@X" onclick="openSidebar('113_Seek the Lodestone',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/158_The Spell of Three.png" id="158_The Spell of Three" data-flag="@X" onclick="openSidebar('158_The Spell of Three',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/166_Awaken the Earth.png" id="166_Awaken the Earth" data-flag="@X" onclick="openSidebar('166_Awaken the Earth',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/3_Armed to the Teeth.png" id="3_Armed to the Teeth" data-flag="@X" onclick="openSidebar('3_Armed to the Teeth',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/55_Lymund Montmercy.png" id="55_Lymund Montmercy" data-flag="@X" onclick="openSidebar('55_Lymund Montmercy',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/89_Curse of Lifeleeching.png" id="89_Curse of Lifeleeching" data-flag="@X" onclick="openSidebar('89_Curse of Lifeleeching',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/160_Surgo, the Flame King.png" id="160_Surgo, the Flame King" data-flag="@N" onclick="openSidebar('160_Surgo, the Flame King',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/167_Beast Hunter.png" id="167_Beast Hunter" data-flag="@X" onclick="openSidebar('167_Beast Hunter',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/6_Bring the Golden Age.png" id="6_Bring the Golden Age" data-flag="@X" onclick="openSidebar('6_Bring the Golden Age',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/64_Potion Cauldron.png" id="64_Potion Cauldron" data-flag="@X" onclick="openSidebar('64_Potion Cauldron',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/95_Defiler of the Night.png" id="95_Defiler of the Night" data-flag="@X" onclick="openSidebar('95_Defiler of the Night',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/125_Blood Sculptor.png" id="125_Blood Sculptor" data-flag="@X" onclick="openSidebar('125_Blood Sculptor',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/171_Deepsoul Witch.png" id="171_Deepsoul Witch" data-flag="@X" onclick="openSidebar('171_Deepsoul Witch',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/13_Decorated Spellknight.png" id="13_Decorated Spellknight" data-flag="@X" onclick="openSidebar('13_Decorated Spellknight',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/65_Prodigy Potioneer.png" id="65_Prodigy Potioneer" data-flag="@X" onclick="openSidebar('65_Prodigy Potioneer',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/97_Desolation Priest.png" id="97_Desolation Priest" data-flag="@X" onclick="openSidebar('97_Desolation Priest',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/131_Curse of Mage's Judgment.png" id="131_Curse of Mages Judgment" data-flag="@X" onclick="openSidebar('131_Curse of Mages Judgment',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/174_Elemental Leech.png" id="174_Elemental Leech" data-flag="@X" onclick="openSidebar('174_Elemental Leech',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/16_Equalise.png" id="16_Equalise" data-flag="@X" onclick="openSidebar('16_Equalise',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/74_Talented Spellcaster.png" id="74_Talented Spellcaster" data-flag="@X" onclick="openSidebar('74_Talented Spellcaster',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/101_Failed Experiment.png" id="101_Failed Experiment" data-flag="@X" onclick="openSidebar('101_Failed Experiment',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/132_Curse of Restlessness.png" id="132_Curse of Restlessness" data-flag="@X" onclick="openSidebar('132_Curse of Restlessness',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/188_Mimicking Miscreant.png" id="188_Mimicking Miscreant" data-flag="@X" onclick="openSidebar('188_Mimicking Miscreant',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/20_Guide of the Order.png" id="20_Guide of the Order" data-flag="@X" onclick="openSidebar('20_Guide of the Order',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/75_Temporal Window.png" id="75_Temporal Window" data-flag="@X" onclick="openSidebar('75_Temporal Window',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/103_The Great Desolation.png" id="103_The Great Desolation" data-flag="@X" onclick="openSidebar('103_The Great Desolation',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/135_Elemental Flamedragon.png" id="135_Elemental Flamedragon" data-flag="@X" onclick="openSidebar('135_Elemental Flamedragon',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/190_Peer into the Multiverse.png" id="190_Peer into the Multiverse" data-flag="@X" onclick="openSidebar('190_Peer into the Multiverse',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/35_Squirrel of Fortitude.png" id="35_Squirrel of Fortitude" data-flag="@X" onclick="openSidebar('35_Squirrel of Fortitude',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/80_Wizened Mage-Master.png" id="80_Wizened Mage-Master" data-flag="@X" onclick="openSidebar('80_Wizened Mage-Master',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/104_Greedy Elixir-Drinker.png" id="104_Greedy Elixir-Drinker" data-flag="@X" onclick="openSidebar('104_Greedy Elixir-Drinker',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/143_Knights' Courage.png" id="143_Knights Courage" data-flag="@N" onclick="openSidebar('143_Knights Courage',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/191_Rageful Spirit.png" id="191_Rageful Spirit" data-flag="@X" onclick="openSidebar('191_Rageful Spirit',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/39_Virtuous Ironsculptor.png" id="39_Virtuous Ironsculptor" data-flag="@X" onclick="openSidebar('39_Virtuous Ironsculptor',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/42_Aldresignorean Investigator.png" id="42_Aldresignorean Investigator" data-flag="@X" onclick="openSidebar('42_Aldresignorean Investigator',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/121_Wrath of Hugo.png" id="121_Wrath of Hugo" data-flag="@X" onclick="openSidebar('121_Wrath of Hugo',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/148_Mirror-Afflicted Mage.png" id="148_Mirror-Afflicted Mage" data-flag="@X" onclick="openSidebar('148_Mirror-Afflicted Mage',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/201_Young Treeling.png" id="201_Young Treeling" data-flag="@X" onclick="openSidebar('201_Young Treeling',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/2_Arcadian Hero.png" id="2_Arcadian Hero" data-flag="@X" onclick="openSidebar('2_Arcadian Hero',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/43_Brewer's Toolkit.png" id="43_Brewers Toolkit" data-flag="@X" onclick="openSidebar('43_Brewers Toolkit',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/81_Animated Cadaver.png" id="81_Animated Cadaver" data-flag="@X" onclick="openSidebar('81_Animated Cadaver',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/150_Oncoming Stormprowler.png" id="150_Oncoming Stormprowler" data-flag="@X" onclick="openSidebar('150_Oncoming Stormprowler',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/165_Arcadian Stalkstomper.png" id="165_Arcadian Stalkstomper" data-flag="@X" onclick="openSidebar('165_Arcadian Stalkstomper',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/10_Cloud Aspirant.png" id="10_Cloud Aspirant" data-flag="@X" onclick="openSidebar('10_Cloud Aspirant',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/44_Bring Down the Gods.png" id="44_Bring Down the Gods" data-flag="@X" onclick="openSidebar('44_Bring Down the Gods',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/83_Chant of the Wicked.png" id="83_Chant of the Wicked" data-flag="@X" onclick="openSidebar('83_Chant of the Wicked',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/123_Arcanes Explorer.png" id="123_Arcanes Explorer" data-flag="@X" onclick="openSidebar('123_Arcanes Explorer',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/170_Brave the Woods.png" id="170_Brave the Woods" data-flag="@X" onclick="openSidebar('170_Brave the Woods',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/11_Curious Elfling.png" id="11_Curious Elfling" data-flag="@X" onclick="openSidebar('11_Curious Elfling',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/46_Clarissa's Thrall.png" id="46_Clarissas Thrall" data-flag="@X" onclick="openSidebar('46_Clarissas Thrall',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/84_The Clarissan Age.png" id="84_The Clarissan Age" data-flag="@X" onclick="openSidebar('84_The Clarissan Age',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/124_Awakened Storm.png" id="124_Awakened Storm" data-flag="@X" onclick="openSidebar('124_Awakened Storm',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/172_Earth Gods' Favour.png" id="172_Earth Gods Favour" data-flag="@N" onclick="openSidebar('172_Earth Gods Favour',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/12_Dashing Watchkeeper.png" id="12_Dashing Watchkeeper" data-flag="@X" onclick="openSidebar('12_Dashing Watchkeeper',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/48_Cunning Brewer.png" id="48_Cunning Brewer" data-flag="@X" onclick="openSidebar('48_Cunning Brewer',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/92_Curse of Sapping.png" id="92_Curse of Sapping" data-flag="@X" onclick="openSidebar('92_Curse of Sapping',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/126_Cavern-Hoarder Dragon.png" id="126_Cavern-Hoarder Dragon" data-flag="@X" onclick="openSidebar('126_Cavern-Hoarder Dragon',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/173_Earthly Stewardship.png" id="173_Earthly Stewardship" data-flag="@X" onclick="openSidebar('173_Earthly Stewardship',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/14_Distinguished Harpy.png" id="14_Distinguished Harpy" data-flag="@X" onclick="openSidebar('14_Distinguished Harpy',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/49_Elvish Elder.png" id="49_Elvish Elder" data-flag="@X" onclick="openSidebar('49_Elvish Elder',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/93_Curse-Eater Beast.png" id="93_Curse-Eater Beast" data-flag="@X" onclick="openSidebar('93_Curse-Eater Beast',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/129_Curse of Defiance.png" id="129_Curse of Defiance" data-flag="@X" onclick="openSidebar('129_Curse of Defiance',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/176_Elvallan Speaker.png" id="176_Elvallan Speaker" data-flag="@X" onclick="openSidebar('176_Elvallan Speaker',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/17_Faramorean Avenger.png" id="17_Faramorean Avenger" data-flag="@X" onclick="openSidebar('17_Faramorean Avenger',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/52_Flittering Fantasist.png" id="52_Flittering Fantasist" data-flag="@X" onclick="openSidebar('52_Flittering Fantasist',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/94_Deathbrew Alchemist.png" id="94_Deathbrew Alchemist" data-flag="@X" onclick="openSidebar('94_Deathbrew Alchemist',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/133_Determined Quester.png" id="133_Determined Quester" data-flag="@X" onclick="openSidebar('133_Determined Quester',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/179_Faeproof Tortoise.png" id="179_Faeproof Tortoise" data-flag="@X" onclick="openSidebar('179_Faeproof Tortoise',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/19_Gift of Genera.png" id="19_Gift of Genera" data-flag="@X" onclick="openSidebar('19_Gift of Genera',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/54_Hugo's Discovery.png" id="54_Hugos Discovery" data-flag="@X" onclick="openSidebar('54_Hugos Discovery',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/99_Disdainful Ball Guests.png" id="99_Disdainful Ball Guests" data-flag="@X" onclick="openSidebar('99_Disdainful Ball Guests',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/136_Enraged Earthblaster.png" id="136_Enraged Earthblaster" data-flag="@X" onclick="openSidebar('136_Enraged Earthblaster',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/183_Hexshield Mage.png" id="183_Hexshield Mage" data-flag="@X" onclick="openSidebar('183_Hexshield Mage',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/23_Harmonious Age Priest.png" id="23_Harmonious Age Priest" data-flag="@X" onclick="openSidebar('23_Harmonious Age Priest',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/57_Mage's Apprentice.png" id="57_Mages Apprentice" data-flag="@X" onclick="openSidebar('57_Mages Apprentice',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/100_Extract Use.png" id="100_Extract Use" data-flag="@X" onclick="openSidebar('100_Extract Use',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/137_Fae-Proof Rascal.png" id="137_Fae-Proof Rascal" data-flag="@X" onclick="openSidebar('137_Fae-Proof Rascal',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/184_Hippo of the Potamus.png" id="184_Hippo of the Potamus" data-flag="@X" onclick="openSidebar('184_Hippo of the Potamus',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/25_Julian's Protection.png" id="25_Julians Protection" data-flag="@X" onclick="openSidebar('25_Julians Protection',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/62_Not Now.png" id="62_Not Now" data-flag="@X" onclick="openSidebar('62_Not Now',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/102_Graveblight.png" id="102_Graveblight" data-flag="@X" onclick="openSidebar('102_Graveblight',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/142_King's Impulse.png" id="142_Kings Impulse" data-flag="@X" onclick="openSidebar('142_Kings Impulse',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/187_Lunar Lupine.png" id="187_Lunar Lupine" data-flag="@X" onclick="openSidebar('187_Lunar Lupine',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/28_Knights' Charge.png" id="28_Knights Charge" data-flag="@X" onclick="openSidebar('28_Knights Charge',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/66_The Rejuvenation.png" id="66_The Rejuvenation" data-flag="@X" onclick="openSidebar('66_The Rejuvenation',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/111_Scornful Sorcerer.png" id="111_Scornful Sorcerer" data-flag="@X" onclick="openSidebar('111_Scornful Sorcerer',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/144_Knight's First Sword.png" id="144_Knights First Sword" data-flag="@X" onclick="openSidebar('144_Knights First Sword',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/189_The Mystical Age.png" id="189_The Mystical Age" data-flag="@X" onclick="openSidebar('189_The Mystical Age',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/29_Novice Squire.png" id="29_Novice Squire" data-flag="@X" onclick="openSidebar('29_Novice Squire',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/67_Results Day.png" id="67_Results Day" data-flag="@X" onclick="openSidebar('67_Results Day',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/115_Sinister Birth.png" id="115_Sinister Birth" data-flag="@X" onclick="openSidebar('115_Sinister Birth',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/146_Mighty Earthborn.png" id="146_Mighty Earthborn" data-flag="@X" onclick="openSidebar('146_Mighty Earthborn',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/193_Return to Roots.png" id="193_Return to Roots" data-flag="@X" onclick="openSidebar('193_Return to Roots',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/30_Passager Pigeon.png" id="30_Passager Pigeon" data-flag="@X" onclick="openSidebar('30_Passager Pigeon',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/72_Surface Siren.png" id="72_Surface Siren" data-flag="@X" onclick="openSidebar('72_Surface Siren',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/116_Slay the Fae.png" id="116_Slay the Fae" data-flag="@X" onclick="openSidebar('116_Slay the Fae',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/149_Novice Swiftblade.png" id="149_Novice Swiftblade" data-flag="@X" onclick="openSidebar('149_Novice Swiftblade',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/196_Spirit of the Wilds.png" id="196_Spirit of the Wilds" data-flag="@X" onclick="openSidebar('196_Spirit of the Wilds',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/32_Radiant Chevalier.png" id="32_Radiant Chevalier" data-flag="@X" onclick="openSidebar('32_Radiant Chevalier',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/73_Sword of Mage's Insight.png" id="73_Sword of Mages Insight" data-flag="@X" onclick="openSidebar('73_Sword of Mages Insight',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/117_Suppressed Brilliance.png" id="117_Suppressed Brilliance" data-flag="@X" onclick="openSidebar('117_Suppressed Brilliance',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/153_Rampaging Researcher.png" id="153_Rampaging Researcher" data-flag="@X" onclick="openSidebar('153_Rampaging Researcher',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/198_Wildborn Explorer.png" id="198_Wildborn Explorer" data-flag="@X" onclick="openSidebar('198_Wildborn Explorer',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/33_The Royal Age.png" id="33_The Royal Age" data-flag="@X" onclick="openSidebar('33_The Royal Age',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/77_Thadallon Trickster.png" id="77_Thadallon Trickster" data-flag="@N" onclick="openSidebar('77_Thadallon Trickster',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/118_Vein Extractor.png" id="118_Vein Extractor" data-flag="@X" onclick="openSidebar('118_Vein Extractor',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/154_Reckless Mageknight.png" id="154_Reckless Mageknight" data-flag="@X" onclick="openSidebar('154_Reckless Mageknight',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/199_Wildwood Scout.png" id="199_Wildwood Scout" data-flag="@X" onclick="openSidebar('199_Wildwood Scout',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/34_Spirit of the Forgotten.png" id="34_Spirit of the Forgotten" data-flag="@X" onclick="openSidebar('34_Spirit of the Forgotten',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/79_Wintermage Apprentice.png" id="79_Wintermage Apprentice" data-flag="@X" onclick="openSidebar('79_Wintermage Apprentice',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/119_Vicious Slaker.png" id="119_Vicious Slaker" data-flag="@X" onclick="openSidebar('119_Vicious Slaker',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/155_The Revolutionary Age.png" id="155_The Revolutionary Age" data-flag="@X" onclick="openSidebar('155_The Revolutionary Age',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/200_Woodland Guardian.png" id="200_Woodland Guardian" data-flag="@X" onclick="openSidebar('200_Woodland Guardian',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/38_Trusted Shieldbrother.png" id="38_Trusted Shieldbrother" data-flag="@X" onclick="openSidebar('38_Trusted Shieldbrother',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/41_Aldresignorean Alchemist.png" id="41_Aldresignorean Alchemist" data-flag="@X" onclick="openSidebar('41_Aldresignorean Alchemist',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/120_Witch of the Bogs.png" id="120_Witch of the Bogs" data-flag="@X" onclick="openSidebar('120_Witch of the Bogs',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/161_Twofold Recruitment.png" id="161_Twofold Recruitment" data-flag="@X" onclick="openSidebar('161_Twofold Recruitment',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/164_Abnormal Evolution.png" id="164_Abnormal Evolution" data-flag="@X" onclick="openSidebar('164_Abnormal Evolution',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/1_Apprentice Medic.png" id="1_Apprentice Medic" data-flag="@X" onclick="openSidebar('1_Apprentice Medic',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/45_Bury in the Mind.png" id="45_Bury in the Mind" data-flag="@X" onclick="openSidebar('45_Bury in the Mind',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/82_Brewer of Legacies.png" id="82_Brewer of Legacies" data-flag="@X" onclick="openSidebar('82_Brewer of Legacies',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/162_Valiant Lieutenant.png" id="162_Valiant Lieutenant" data-flag="@X" onclick="openSidebar('162_Valiant Lieutenant',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/168_Beastly Once-Prince.png" id="168_Beastly Once-Prince" data-flag="@X" onclick="openSidebar('168_Beastly Once-Prince',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/4_Bittibon Priest.png" id="4_Bittibon Priest" data-flag="@X" onclick="openSidebar('4_Bittibon Priest',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/47_Correct.png" id="47_Correct" data-flag="@X" onclick="openSidebar('47_Correct',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/85_Clarissan Shadowblot.png" id="85_Clarissan Shadowblot" data-flag="@X" onclick="openSidebar('85_Clarissan Shadowblot',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/122_Anointed by Dragons.png" id="122_Anointed by Dragons" data-flag="@X" onclick="openSidebar('122_Anointed by Dragons',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/169_Beastly Rage.png" id="169_Beastly Rage" data-flag="@X" onclick="openSidebar('169_Beastly Rage',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/5_Break the Curse.png" id="5_Break the Curse" data-flag="@X" onclick="openSidebar('5_Break the Curse',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/50_Fae Princeling.png" id="50_Fae Princeling" data-flag="@X" onclick="openSidebar('50_Fae Princeling',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/86_Crow's Exchange.png" id="86_Crows Exchange" data-flag="@X" onclick="openSidebar('86_Crows Exchange',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/127_Chipmunk Cavalier.png" id="127_Chipmunk Cavalier" data-flag="@X" onclick="openSidebar('127_Chipmunk Cavalier',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/175_Elvallan Mystic.png" id="175_Elvallan Mystic" data-flag="@X" onclick="openSidebar('175_Elvallan Mystic',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/7_Castle Cookieguard.png" id="7_Castle Cookieguard" data-flag="@X" onclick="openSidebar('7_Castle Cookieguard',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/51_Fae Redirection.png" id="51_Fae Redirection" data-flag="@X" onclick="openSidebar('51_Fae Redirection',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/87_Cruel Cursemaster.png" id="87_Cruel Cursemaster" data-flag="@X" onclick="openSidebar('87_Cruel Cursemaster',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/128_Curse of Cowardice.png" id="128_Curse of Cowardice" data-flag="@X" onclick="openSidebar('128_Curse of Cowardice',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/177_Elven Charmmaster.png" id="177_Elven Charmmaster" data-flag="@X" onclick="openSidebar('177_Elven Charmmaster',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/8_Citadel Spellknight.png" id="8_Citadel Spellknight" data-flag="@X" onclick="openSidebar('8_Citadel Spellknight',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/53_Gifted Potioneer.png" id="53_Gifted Potioneer" data-flag="@X" onclick="openSidebar('53_Gifted Potioneer',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/88_Curse of Betrayal.png" id="88_Curse of Betrayal" data-flag="@X" onclick="openSidebar('88_Curse of Betrayal',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/130_Curse of Knowing.png" id="130_Curse of Knowing" data-flag="@X" onclick="openSidebar('130_Curse of Knowing',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/178_Enforce the Tradition.png" id="178_Enforce the Tradition" data-flag="@X" onclick="openSidebar('178_Enforce the Tradition',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/9_Clavesian Recruiter.png" id="9_Clavesian Recruiter" data-flag="@X" onclick="openSidebar('9_Clavesian Recruiter',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/56_Magerie Graduate.png" id="56_Magerie Graduate" data-flag="@X" onclick="openSidebar('56_Magerie Graduate',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/90_Curse of Lost Hopes.png" id="90_Curse of Lost Hopes" data-flag="@X" onclick="openSidebar('90_Curse of Lost Hopes',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/134_Doomed Comrade.png" id="134_Doomed Comrade" data-flag="@X" onclick="openSidebar('134_Doomed Comrade',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/180_Faeseeking Traveller.png" id="180_Faeseeking Traveller" data-flag="@X" onclick="openSidebar('180_Faeseeking Traveller',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/15_Double-Edged Sword.png" id="15_Double-Edged Sword" data-flag="@X" onclick="openSidebar('15_Double-Edged Sword',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/58_Memory Mage.png" id="58_Memory Mage" data-flag="@X" onclick="openSidebar('58_Memory Mage',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/91_Curse of Pestilence.png" id="91_Curse of Pestilence" data-flag="@X" onclick="openSidebar('91_Curse of Pestilence',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/138_Feral Chipmunk.png" id="138_Feral Chipmunk" data-flag="@X" onclick="openSidebar('138_Feral Chipmunk',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/181_Gingerbread Charm.png" id="181_Gingerbread Charm" data-flag="@X" onclick="openSidebar('181_Gingerbread Charm',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/18_Faudeville Feline.png" id="18_Faudeville Feline" data-flag="@X" onclick="openSidebar('18_Faudeville Feline',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/59_Meticulous Archivist.png" id="59_Meticulous Archivist" data-flag="@X" onclick="openSidebar('59_Meticulous Archivist',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/96_Deliver to Death.png" id="96_Deliver to Death" data-flag="@X" onclick="openSidebar('96_Deliver to Death',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/139_Gruff Forgemaster.png" id="139_Gruff Forgemaster" data-flag="@X" onclick="openSidebar('139_Gruff Forgemaster',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/182_Grove Ritualist.png" id="182_Grove Ritualist" data-flag="@X" onclick="openSidebar('182_Grove Ritualist',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/21_Halt the Onslaught.png" id="21_Halt the Onslaught" data-flag="@X" onclick="openSidebar('21_Halt the Onslaught',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/60_Mythos of the Sorcier.png" id="60_Mythos of the Sorcier" data-flag="@X" onclick="openSidebar('60_Mythos of the Sorcier',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/98_Disciple of Gothel.png" id="98_Disciple of Gothel" data-flag="@X" onclick="openSidebar('98_Disciple of Gothel',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/140_Harness the Flame.png" id="140_Harness the Flame" data-flag="@X" onclick="openSidebar('140_Harness the Flame',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/185_Hungry Cookiehound.png" id="185_Hungry Cookiehound" data-flag="@X" onclick="openSidebar('185_Hungry Cookiehound',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/22_Hardened Resolve.png" id="22_Hardened Resolve" data-flag="@X" onclick="openSidebar('22_Hardened Resolve',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/61_Nemosian Discoverer.png" id="61_Nemosian Discoverer" data-flag="@X" onclick="openSidebar('61_Nemosian Discoverer',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/105_Grim Octoped.png" id="105_Grim Octoped" data-flag="@X" onclick="openSidebar('105_Grim Octoped',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/141_Jouster's Assistant.png" id="141_Jousters Assistant" data-flag="@X" onclick="openSidebar('141_Jousters Assistant',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/186_Lodestone Guard.png" id="186_Lodestone Guard" data-flag="@X" onclick="openSidebar('186_Lodestone Guard',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/24_Ill-Fated Mentor.png" id="24_Ill-Fated Mentor" data-flag="@X" onclick="openSidebar('24_Ill-Fated Mentor',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/68_Scour the Stacks.png" id="68_Scour the Stacks" data-flag="@X" onclick="openSidebar('68_Scour the Stacks',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/106_Gutwrenching Blow.png" id="106_Gutwrenching Blow" data-flag="@X" onclick="openSidebar('106_Gutwrenching Blow',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/145_Magefire.png" id="145_Magefire" data-flag="@X" onclick="openSidebar('145_Magefire',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/192_Rampaging Direwolf.png" id="192_Rampaging Direwolf" data-flag="@X" onclick="openSidebar('192_Rampaging Direwolf',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/26_Knight of Farewells.png" id="26_Knight of Farewells" data-flag="@X" onclick="openSidebar('26_Knight of Farewells',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/69_Sorcier's Scorn.png" id="69_Sorciers Scorn" data-flag="@X" onclick="openSidebar('69_Sorciers Scorn',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/107_Horrific Deathmaw.png" id="107_Horrific Deathmaw" data-flag="@X" onclick="openSidebar('107_Horrific Deathmaw',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/147_Mine Crafter.png" id="147_Mine Crafter" data-flag="@X" onclick="openSidebar('147_Mine Crafter',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/194_Rootbonder.png" id="194_Rootbonder" data-flag="@X" onclick="openSidebar('194_Rootbonder',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/27_Knight Owl.png" id="27_Knight Owl" data-flag="@X" onclick="openSidebar('27_Knight Owl',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/70_Spellmage Sentry.png" id="70_Spellmage Sentry" data-flag="@X" onclick="openSidebar('70_Spellmage Sentry',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/108_Jealous Mage.png" id="108_Jealous Mage" data-flag="@X" onclick="openSidebar('108_Jealous Mage',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/151_Plunder the Knight.png" id="151_Plunder the Knight" data-flag="@X" onclick="openSidebar('151_Plunder the Knight',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/195_Scout the Woods.png" id="195_Scout the Woods" data-flag="@X" onclick="openSidebar('195_Scout the Woods',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/36_Steelspell Knight.png" id="36_Steelspell Knight" data-flag="@X" onclick="openSidebar('36_Steelspell Knight',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/71_Spiteful Fae.png" id="71_Spiteful Fae" data-flag="@X" onclick="openSidebar('71_Spiteful Fae',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/109_Kirrith Aristocrat.png" id="109_Kirrith Aristocrat" data-flag="@X" onclick="openSidebar('109_Kirrith Aristocrat',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/152_Pyrosurge Elemental.png" id="152_Pyrosurge Elemental" data-flag="@X" onclick="openSidebar('152_Pyrosurge Elemental',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/197_Thornroot Serpent.png" id="197_Thornroot Serpent" data-flag="@X" onclick="openSidebar('197_Thornroot Serpent',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/37_Temporal Fugue.png" id="37_Temporal Fugue" data-flag="@X" onclick="openSidebar('37_Temporal Fugue',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/78_Voracious Spellseeker.png" id="78_Voracious Spellseeker" data-flag="@X" onclick="openSidebar('78_Voracious Spellseeker',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/110_Memory Eater.png" id="110_Memory Eater" data-flag="@X" onclick="openSidebar('110_Memory Eater',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/156_Silverblade Knight.png" id="156_Silverblade Knight" data-flag="@X" onclick="openSidebar('156_Silverblade Knight',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/40_War Mage Spellstriker.png" id="40_War Mage Spellstriker" data-flag="@X" onclick="openSidebar('40_War Mage Spellstriker',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/112_Scouring of Camelot.png" id="112_Scouring of Camelot" data-flag="@X" onclick="openSidebar('112_Scouring of Camelot',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/157_Smash the Mirror.png" id="157_Smash the Mirror" data-flag="@X" onclick="openSidebar('157_Smash the Mirror',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/114_Seize the Truth.png" id="114_Seize the Truth" data-flag="@X" onclick="openSidebar('114_Seize the Truth',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/159_Stormwing Dragon.png" id="159_Stormwing Dragon" data-flag="@X" onclick="openSidebar('159_Stormwing Dragon',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/163_Warblaster Mage.png" id="163_Warblaster Mage" data-flag="@X" onclick="openSidebar('163_Warblaster Mage',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/221_Kali, Magerie Preserver.png" id="221_Kali, Magerie Preserver" data-flag="@X" onclick="openSidebar('221_Kali, Magerie Preserver',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/215_Gothel, Wicked Alchemist.png" id="215_Gothel, Wicked Alchemist" data-flag="@X" onclick="openSidebar('215_Gothel, Wicked Alchemist',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/207_Curse of Decay.png" id="207_Curse of Decay" data-flag="@X" onclick="openSidebar('207_Curse of Decay',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/217_Harnesser of the Woods.png" id="217_Harnesser of the Woods" data-flag="@X" onclick="openSidebar('217_Harnesser of the Woods',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/216_Halima Tohme.png" id="216_Halima Tohme" data-flag="@X" onclick="openSidebar('216_Halima Tohme',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/224_Lukas's Redemption.png" id="224_Lukass Redemption" data-flag="@X" onclick="openSidebar('224_Lukass Redemption',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/238_Steal the Spotlight.png" id="238_Steal the Spotlight" data-flag="@X" onclick="openSidebar('238_Steal the Spotlight',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/218_Hugo, Jaded Mage.png" id="218_Hugo, Jaded Mage" data-flag="@X" onclick="openSidebar('218_Hugo, Jaded Mage',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/228_Primal Awakening.png" id="228_Primal Awakening" data-flag="@X" onclick="openSidebar('228_Primal Awakening',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/232_Relentless Growth.png" id="232_Relentless Growth" data-flag="@X" onclick="openSidebar('232_Relentless Growth',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/204_Citadel Mage-Masters.png" id="204_Citadel Mage-Masters" data-flag="@X" onclick="openSidebar('204_Citadel Mage-Masters',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/248_Simmer.png" id="248_Simmer" data-flag="@X" onclick="openSidebar('248_Simmer',true)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/247_Rise.png" id="247_Rise" data-flag="@X" onclick="openSidebar('247_Rise',true)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/246_Now.png" id="246_Now" data-flag="@X" onclick="openSidebar('246_Now',true)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/249_Stay.png" id="249_Stay" data-flag="@X" onclick="openSidebar('249_Stay',true)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/250_Truth.png" id="250_Truth" data-flag="@X" onclick="openSidebar('250_Truth',true)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/211_Fae Alchemist.png" id="211_Fae Alchemist" data-flag="@X" onclick="openSidebar('211_Fae Alchemist',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/241_Vengeful Caverndweller.png" id="241_Vengeful Caverndweller" data-flag="@X" onclick="openSidebar('241_Vengeful Caverndweller',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/230_Rampaging Magmaborn.png" id="230_Rampaging Magmaborn" data-flag="@X" onclick="openSidebar('230_Rampaging Magmaborn',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/235_Speaker for the Trees.png" id="235_Speaker for the Trees" data-flag="@X" onclick="openSidebar('235_Speaker for the Trees',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/242_Wise Elder.png" id="242_Wise Elder" data-flag="@X" onclick="openSidebar('242_Wise Elder',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/209_Elliot, the Necromancer.png" id="209_Elliot, the Necromancer" data-flag="@X" onclick="openSidebar('209_Elliot, the Necromancer',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/203_Chanaga, Doctor of Death.png" id="203_Chanaga, Doctor of Death" data-flag="@X" onclick="openSidebar('203_Chanaga, Doctor of Death',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/233_Runic Roots.png" id="233_Runic Roots" data-flag="@X" onclick="openSidebar('233_Runic Roots',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/219_Hugo's Spellbook.png" id="219_Hugos Spellbook" data-flag="@X" onclick="openSidebar('219_Hugos Spellbook',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/212_Flame-Forged Sword.png" id="212_Flame-Forged Sword" data-flag="@X" onclick="openSidebar('212_Flame-Forged Sword',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/227_Merlin Reanimated.png" id="227_Merlin Reanimated" data-flag="@X" onclick="openSidebar('227_Merlin Reanimated',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/240_Turn to Dirt.png" id="240_Turn to Dirt" data-flag="@X" onclick="openSidebar('240_Turn to Dirt',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/208_Eilothos, the Dreamer.png" id="208_Eilothos, the Dreamer" data-flag="@X" onclick="openSidebar('208_Eilothos, the Dreamer',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/225_Max, the First Sorcier.png" id="225_Max, the First Sorcier" data-flag="@X" onclick="openSidebar('225_Max, the First Sorcier',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/231_Rapid Training.png" id="231_Rapid Training" data-flag="@X" onclick="openSidebar('231_Rapid Training',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/229_Prince Asmund.png" id="229_Prince Asmund" data-flag="@X" onclick="openSidebar('229_Prince Asmund',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/214_Gleeful Medium.png" id="214_Gleeful Medium" data-flag="@X" onclick="openSidebar('214_Gleeful Medium',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/239_Trance of the Fae.png" id="239_Trance of the Fae" data-flag="@X" onclick="openSidebar('239_Trance of the Fae',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/226_Maximillian Montmercy.png" id="226_Maximillian Montmercy" data-flag="@X" onclick="openSidebar('226_Maximillian Montmercy',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/234_Sir Cal Clemency.png" id="234_Sir Cal Clemency" data-flag="@X" onclick="openSidebar('234_Sir Cal Clemency',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/237_Spoiled Prince.png" id="237_Spoiled Prince" data-flag="@X" onclick="openSidebar('237_Spoiled Prince',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/206_Curious Enchanter.png" id="206_Curious Enchanter" data-flag="@X" onclick="openSidebar('206_Curious Enchanter',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/244_The Zauber Chronicles.png" id="244_The Zauber Chronicles" data-flag="@X" onclick="openSidebar('244_The Zauber Chronicles',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/222_Knight of the Forge.png" id="222_Knight of the Forge" data-flag="@X" onclick="openSidebar('222_Knight of the Forge',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/202_Chalybian Defouling.png" id="202_Chalybian Defouling" data-flag="@X" onclick="openSidebar('202_Chalybian Defouling',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/210_Emotional Explosion.png" id="210_Emotional Explosion" data-flag="@X" onclick="openSidebar('210_Emotional Explosion',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/243_Wyatt Penthorpe.png" id="243_Wyatt Penthorpe" data-flag="@X" onclick="openSidebar('243_Wyatt Penthorpe',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/236_Spellbiter Mage.png" id="236_Spellbiter Mage" data-flag="@X" onclick="openSidebar('236_Spellbiter Mage',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/213_Forsyth, Blade of Memory.png" id="213_Forsyth, Blade of Memory" data-flag="@X" onclick="openSidebar('213_Forsyth, Blade of Memory',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/205_Clarissa, the Enchantress.png" id="205_Clarissa, the Enchantress" data-flag="@X" onclick="openSidebar('205_Clarissa, the Enchantress',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/220_Julian and Hugo.png" id="220_Julian and Hugo" data-flag="@X" onclick="openSidebar('220_Julian and Hugo',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/223_Lukas Zauber, Defiant.png" id="223_Lukas Zauber, Defiant" data-flag="@X" onclick="openSidebar('223_Lukas Zauber, Defiant',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/245_Hugo Montmercy.png" id="245_Hugo Montmercy" data-flag="@X" onclick="openSidebar('245_Hugo Montmercy',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/251_Arcane Lodestone.png" id="251_Arcane Lodestone" data-flag="@X" onclick="openSidebar('251_Arcane Lodestone',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/256_Mage's Salamander.png" id="256_Mages Salamander" data-flag="@X" onclick="openSidebar('256_Mages Salamander',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/258_Sorcier's Journal.png" id="258_Sorciers Journal" data-flag="@X" onclick="openSidebar('258_Sorciers Journal',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/259_Talisman of Air.png" id="259_Talisman of Air" data-flag="@X" onclick="openSidebar('259_Talisman of Air',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/260_Talisman of Earth.png" id="260_Talisman of Earth" data-flag="@X" onclick="openSidebar('260_Talisman of Earth',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/261_Talisman of Fire.png" id="261_Talisman of Fire" data-flag="@X" onclick="openSidebar('261_Talisman of Fire',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/262_Talisman of the Arcane.png" id="262_Talisman of the Arcane" data-flag="@X" onclick="openSidebar('262_Talisman of the Arcane',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/263_Talisman of Water.png" id="263_Talisman of Water" data-flag="@X" onclick="openSidebar('263_Talisman of Water',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/252_Decoy Rodent.png" id="252_Decoy Rodent" data-flag="@X" onclick="openSidebar('252_Decoy Rodent',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/253_Knight's Helmet.png" id="253_Knights Helmet" data-flag="@X" onclick="openSidebar('253_Knights Helmet',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/254_Living Cauldron.png" id="254_Living Cauldron" data-flag="@X" onclick="openSidebar('254_Living Cauldron',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/255_Magerie Lodestone.png" id="255_Magerie Lodestone" data-flag="@X" onclick="openSidebar('255_Magerie Lodestone',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/257_Scarecrow Scout.png" id="257_Scarecrow Scout" data-flag="@X" onclick="openSidebar('257_Scarecrow Scout',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/266_Charming Field.png" id="266_Charming Field" data-flag="@X" onclick="openSidebar('266_Charming Field',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/265_Charming Brook.png" id="265_Charming Brook" data-flag="@X" onclick="openSidebar('265_Charming Brook',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/268_Charming Marsh.png" id="268_Charming Marsh" data-flag="@X" onclick="openSidebar('268_Charming Marsh',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/269_Charming Ridge.png" id="269_Charming Ridge" data-flag="@X" onclick="openSidebar('269_Charming Ridge',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/267_Charming Grove.png" id="267_Charming Grove" data-flag="@X" onclick="openSidebar('267_Charming Grove',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/271_Montmercy Castle.png" id="271_Montmercy Castle" data-flag="@X" onclick="openSidebar('271_Montmercy Castle',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/264_Calemagus Crossroads.png" id="264_Calemagus Crossroads" data-flag="@X" onclick="openSidebar('264_Calemagus Crossroads',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/272_Monument to Hugo.png" id="272_Monument to Hugo" data-flag="@X" onclick="openSidebar('272_Monument to Hugo',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/273_Secret Tunnels.png" id="273_Secret Tunnels" data-flag="@X" onclick="openSidebar('273_Secret Tunnels',false)"></div>
+			<div class="container"><img alt="/sets/TZC-files/img/270_Magerie.png" id="270_Magerie" data-flag="@X" onclick="openSidebar('270_Magerie',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+	</div>
+</div>
+	<div class="sidebar" id="sidebar">
+		<div class="sidebar-container">
+			<img id="sidebar_img" class="sidebar-img" src="/img/er.png">
+			<img id="sidebar_h_img" class="sidebar-h-img">
+			<button class="flip-btn" id="sidebar-flip-btn" onclick="imgFlip('sidebar_img')"></button>
+		</div>
+		<button class="close-btn" onclick="closeSidebar()"></button>
+	</div>
+	<div class="footer"></div>
+
+	<script>
+	const delay = ms => new Promise(res => setTimeout(res, ms));
+		let specialchars = "";
+
+	document.addEventListener('DOMContentLoaded', async function() {
+		await fetch('/lists/all-cards.json')
+					.then(response => response.json())
+					.then(json => {
+						card_list = json;
+				}).catch(error => console.error('Error:', error));
+
+				await fetch('/resources/replacechars.txt')
+					.then(response => response.text())
+					.then(text => {
+						specialchars = text; 
+				}).catch(error => console.error('Error:', error));
+
+				card_list_arrayified = card_list.cards;
+
+		preloadImgs = document.getElementsByClassName('preload-hidden');
+		
+		let images_loaded = [];
+
+		do {
+			await delay(100);
+			images_loaded = []
+			for (const img of preloadImgs)
+			{
+				images_loaded.push(isImageOk(img));
+			}
+		}
+		while (images_loaded.includes(false));
+
+		
+		loadImages();
+	});
+
+	function isImageOk(img) {
+		if (!img.complete || img.naturalWidth == 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	function loadImages() {
+		const images = document.querySelectorAll('.grid-container img');
+
+		images.forEach(img => {
+			const flag = img.getAttribute('data-flag');
+
+			if (flag === '@N') {
+				img.src = '/img/card_back.png';
+				img.removeAttribute("onclick");
+				img.style.cursor = 'default';
+			}
+			else
+			{
+				img.src = img.alt;
+
+				if (flag === '@E') {
+					img.removeAttribute("onclick");
+					img.style.cursor = 'default';
+				}
+			}
+
+			img.style.visibility = 'visible';
+		});
+	}
+
+	window.addEventListener('resize', function(event) {
+		setSidebarTop();
+	}, true);
+
+	function setSidebarTop() {
+		let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+		let sh = document.getElementById('sidebar').offsetHeight;
+		let height = 100 * ((vh - sh) / 2) / vh;
+		document.getElementById('sidebar').style.top = height + '%';
+	}
+
+	let horizontal = false;
+
+	function imgFlip(num) {
+		tmp = document.getElementById(num).src;
+		console.log(num);
+		document.getElementById(num).src = document.getElementById(num).dataset.alt_src;
+		document.getElementById(num).dataset.alt_src = tmp;
+
+		if (num == 'sidebar_img')
+		{
+			const rotated_img = document.getElementById('sidebar_h_img');
+			const sidebar_img = document.getElementById('sidebar_img');
+
+			if (horizontal && rotated_img.style.display == 'none')
+			{
+				rotated_img.style.display = "block";
+				sidebar_img.style.filter = "blur(2px) brightness(0.7)";
+			}
+			else
+			{
+				rotated_img.style.display = "none";
+				sidebar_img.style.filter = "";
+			}
+		}
+	}
+
+	function openSidebar(id, h = false) {
+		horizontal = h;
+		scroll_pct = window.scrollY / document.documentElement.scrollHeight;
+		
+		document.getElementById('sidebar').style.display = 'grid';
+
+		const rotated_img = document.getElementById('sidebar_h_img');
+		const sidebar_img = document.getElementById('sidebar_img');
+
+		sidebar_img.src = document.getElementById(id).src;
+		rotated_img.src = document.getElementById(id).src.replace("_back", "_front");
+
+		if (horizontal && sidebar_img.src.includes("_front"))
+		{
+			rotated_img.style.display = "block";
+			sidebar_img.style.filter = "blur(2px) brightness(0.7)";
+		}
+		else
+		{
+			rotated_img.style.display = "none";
+			sidebar_img.style.filter = "";
+		}
+
+		if (document.getElementById(id).dataset.alt_src)
+		{
+			document.getElementById('sidebar_img').dataset.alt_src = document.getElementById(id).dataset.alt_src;
+			document.getElementById('sidebar-flip-btn').style.display = 'block';
+		}
+		else
+		{
+			delete document.getElementById('sidebar_img').dataset.alt_src;
+			document.getElementById('sidebar-flip-btn').style.display = 'none';
+		}
+		document.getElementById('main-content').style.width = '60%';
+		
+		scroll_pos = scroll_pct * document.documentElement.scrollHeight;
+		window.scrollTo(window.scrollX, scroll_pos);
+		setSidebarTop();
+	}
+
+	function closeSidebar() {
+		scroll_pct = window.scrollY / document.documentElement.scrollHeight;
+
+		document.getElementById('sidebar').style.display = 'none';
+		document.getElementById('main-content').style.width = '100%';
+		
+
+		scroll_pos = scroll_pct * document.documentElement.scrollHeight;
+		window.scrollTo(window.scrollX, scroll_pos);
+	}
+
+	document.getElementById("search").addEventListener("keypress", function(event) {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			search();
+		}
+	});
+
+	function search() {
+		const url = new URL('search', window.location.origin);
+		url.searchParams.append('search', document.getElementById("search").value);
+		window.location.href = url;
+	}
+
+		function randomCard() {
+				let i = Math.floor(Math.random() * (card_list_arrayified.length + 1));
+				let random_card = card_list_arrayified[i];
+
+				const url = new URL('card', window.location.origin);
+				const params = {
+					set: random_card.set,
+					num: random_card.number,
+					name: random_card.card_name
+				}
+				for (const key in params) {
+					url.searchParams.append(key, params[key]);
+				}
+
+				window.location.href = url;
+			}
+	</script>
+</body>
+</html>
