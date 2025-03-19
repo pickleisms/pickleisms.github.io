@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="icon" type="image/png" href="/sets/BFF-files/icon.png"/>
+	<link rel="stylesheet" href="/resources/header.css">
+	<title>BFF visual preview</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			overscroll-behavior: none;
+			background-size: cover;
+			background-attachment: fixed;
+		}
+		.main-content {
+			position: relative;
+			width: 100%;
+			float: left;
+			z-index: 2;
+			justify-items: center;
+		}
+		.sidebar {
+			position: sticky;
+			top: 0;
+			display: none;
+			text-align: center;
+			padding-right: 3%;
+			z-index: 1;
+			justify-items: center;
+		}
+		.sidebar-container {
+			width: 80%;
+			max-width: 375px;
+			position: relative;
+		}
+		.sidebar-h-img {
+			display: none;
+			transform: rotate(90deg);
+			position: absolute;
+			left: 10%;
+			top: 10%;
+			width: 85%;
+		}
+		.sidebar-img {
+			vertical-align: middle;
+			width: 100%;
+		}
+		.close-btn {
+			background: url('/img/close.png') no-repeat;
+			background-size: contain;
+			background-position: center;
+			width: 10%;
+			height: 10%;
+			border: none;
+			cursor: pointer;
+			position: absolute;
+			right: 4%;
+		}
+		.close-btn:hover {
+			background: url('/img/close-hover.png') no-repeat;
+			background-size: contain;
+			background-position: center;
+		}
+		.grid-container {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+			gap: 2px;
+			padding-left: 5%;
+			padding-right: 5%;
+			padding-bottom: 3%;
+			justify-items: center;
+			max-width: 1200px;
+		}
+		.grid-container img {
+			width: 100%;
+			height: auto;
+			display: block;
+			visibility: hidden;
+			cursor: pointer;
+		}
+		.banner {
+			width: 100%;
+			height: auto;
+			padding-top: 20px;
+			padding-bottom: 50px;
+		}
+		.logo {
+			display: block;
+			margin: auto;
+			max-width: 30%;
+			max-height: 320px;
+		}
+		.container {
+			position: relative;
+			width: 100%;
+		}
+		.container img {
+			width: 100%;
+			height: auto;
+		}
+		.flip-btn {
+			background: url('/img/flip.png') no-repeat;
+			background-size: contain;
+			background-position: center;
+			width: 15%;
+			height: 11%;
+			cursor: pointer;
+			border: none;
+			position: absolute;
+			left: 50%;
+			top: 48%;
+			transform: translate(-50%, -50%);
+			opacity: 0.5;
+		}
+		.flip-btn:hover {
+			background: url('/img/flip-hover.png') no-repeat;
+			background-size: contain;
+			background-position: center;
+		}
+		.icon-bar {
+			display: grid;
+			grid-template-columns: repeat(10, 3fr 2fr) 3fr;
+			gap: 1px;
+			padding-left: 5%;
+			padding-right: 5%;
+			padding-top: 2%;
+			padding-bottom: 1%;
+			justify-items: center;
+			align-items: center;
+		}
+		.icon-bar .icon img {
+			width: 90%;
+			max-width: 80px;
+			height: auto;
+			display: block;
+			padding: 5%;
+			margin: auto;
+			text-align: center;
+		}
+		.icon-bar .dot img {
+			width: 50%;
+			max-width: 65px;
+			height: auto;
+			display: block;
+			margin: auto;
+			text-align: center;
+		}
+		.preload-hidden {
+			display: none;
+		}
+		/* This is here to enable the stickiness in a Float environment. I don't know why it works but it does */
+		.footer {
+			clear: both;
+		}
+	</style>
+</head>
+<body>
+	<img class="preload-hidden" src="/img/dot.png" />
+	<img class="preload-hidden" src="/sets/BFF-files/logo.png" />
+	<img class="preload-hidden" src="/sets/BFF-files/icon.png" />
+		<img class="preload-hidden" src="/sets/CAL-files/icon.png" />
+		<img class="preload-hidden" src="/sets/CC1-files/icon.png" />
+		<img class="preload-hidden" src="/sets/E21-files/icon.png" />
+		<img class="preload-hidden" src="/sets/SUN-files/icon.png" />
+		<img class="preload-hidden" src="/sets/TLB-files/icon.png" />
+		<img class="preload-hidden" src="/sets/TZC-files/icon.png" />
+		<div class="header">
+		<div class="search-grid">
+			<a href="/"><img class="sg-logo" src="/img/banner.png"></a>
+			<img class="sg-icon" src="/img/search.png">
+			<input type="text" inputmode="search" placeholder="Search ..." name="search" id="search" spellcheck="false" autocomplete="off" autocorrect="off" spellcheck="false">
+			<a href="/all-sets"><img src="/img/sets.png" class="sg-icon">Sets</a>
+			<a href="/deckbuilder"><img src="/img/deck.png" class="sg-icon">Deckbuilder</a>
+			<a onclick="randomCard()"><img src="/img/random.png" class="sg-icon">Random</a>
+		</div>
+	</div>
+
+	<div class="icon-bar">
+			<div class="icon"><a href="BFF"><img src="/sets/BFF-files/icon.png"></img></a></div>
+		 <div class="dot"><img src="/img/dot.png"></img></div>
+		<div class="icon"><a href="CAL"><img src="/sets/CAL-files/icon.png"></img></a></div>
+		 <div class="dot"><img src="/img/dot.png"></img></div>
+		<div class="icon"><a href="CC1"><img src="/sets/CC1-files/icon.png"></img></a></div>
+		 <div class="dot"><img src="/img/dot.png"></img></div>
+		<div class="icon"><a href="E21"><img src="/sets/E21-files/icon.png"></img></a></div>
+		 <div class="dot"><img src="/img/dot.png"></img></div>
+		<div class="icon"><a href="SUN"><img src="/sets/SUN-files/icon.png"></img></a></div>
+		 <div class="dot"><img src="/img/dot.png"></img></div>
+		<div class="icon"><a href="TLB"><img src="/sets/TLB-files/icon.png"></img></a></div>
+		 <div class="dot"><img src="/img/dot.png"></img></div>
+		<div class="icon"><a href="TZC"><img src="/sets/TZC-files/icon.png"></img></a></div>
+
+		</div>
+		<div class="banner">
+		<img class="logo" src="/sets/BFF-files/logo.png">
+		</div>
+		<div class="main-content" id="main-content">
+			<div class="grid-container">
+				<div class="container"><img alt="/sets/BFF-files/img/4_Headmistress Clair Jade.png" id="4_Headmistress Clair Jade" data-flag="@X" onclick="openSidebar('4_Headmistress Clair Jade',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/14_Callum Firwick.png" id="14_Callum Firwick" data-flag="@X" onclick="openSidebar('14_Callum Firwick',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/25_Ambitious Scholar.png" id="25_Ambitious Scholar" data-flag="@X" onclick="openSidebar('25_Ambitious Scholar',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/43_Impassioned Vocalist.png" id="43_Impassioned Vocalist" data-flag="@X" onclick="openSidebar('43_Impassioned Vocalist',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/62_The Second Gauntlet.png" id="62_The Second Gauntlet" data-flag="@X" onclick="openSidebar('62_The Second Gauntlet',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/2_Criminal Prosecution.png" id="2_Criminal Prosecution" data-flag="@X" onclick="openSidebar('2_Criminal Prosecution',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/21_Theoretical Telepathy.png" id="21_Theoretical Telepathy" data-flag="@X" onclick="openSidebar('21_Theoretical Telepathy',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/26_Bog Battlemage.png" id="26_Bog Battlemage" data-flag="@X" onclick="openSidebar('26_Bog Battlemage',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/45_Lyra Rhapsody.png" id="45_Lyra Rhapsody" data-flag="@X" onclick="openSidebar('45_Lyra Rhapsody',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/66_Veridance Project.png" id="66_Veridance Project" data-flag="@X" onclick="openSidebar('66_Veridance Project',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/6_Mira, Paxaeus Peacemaker.png" id="6_Mira, Paxaeus Peacemaker" data-flag="@X" onclick="openSidebar('6_Mira, Paxaeus Peacemaker',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/23_Theorios Project.png" id="23_Theorios Project" data-flag="@X" onclick="openSidebar('23_Theorios Project',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/31_Krista, Voice of Cunning.png" id="31_Krista, Voice of Cunning" data-flag="@X" onclick="openSidebar('31_Krista, Voice of Cunning',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/48_Passionate Poets.png" id="48_Passionate Poets" data-flag="@X" onclick="openSidebar('48_Passionate Poets',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/57_Battlefield Biologist.png" id="57_Battlefield Biologist" data-flag="@X" onclick="openSidebar('57_Battlefield Biologist',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/7_Paxaeus Project.png" id="7_Paxaeus Project" data-flag="@X" onclick="openSidebar('7_Paxaeus Project',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/16_Edifying Journalism.png" id="16_Edifying Journalism" data-flag="@X" onclick="openSidebar('16_Edifying Journalism',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/33_Nyxhaum Project.png" id="33_Nyxhaum Project" data-flag="@X" onclick="openSidebar('33_Nyxhaum Project',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/50_Pyrinspir Project.png" id="50_Pyrinspir Project" data-flag="@X" onclick="openSidebar('50_Pyrinspir Project',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/59_Greenhouse Gardener.png" id="59_Greenhouse Gardener" data-flag="@X" onclick="openSidebar('59_Greenhouse Gardener',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/1_Battlefield Nurse.png" id="1_Battlefield Nurse" data-flag="@X" onclick="openSidebar('1_Battlefield Nurse',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/19_Research Assistant.png" id="19_Research Assistant" data-flag="@X" onclick="openSidebar('19_Research Assistant',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/34_The Rise and Fall of Malifors.png" id="34_The Rise and Fall of Malifors" data-flag="@X" onclick="openSidebar('34_The Rise and Fall of Malifors',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/52_Pyrotechnic Performance.png" id="52_Pyrotechnic Performance" data-flag="@X" onclick="openSidebar('52_Pyrotechnic Performance',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/60_Gym Trainer.png" id="60_Gym Trainer" data-flag="@X" onclick="openSidebar('60_Gym Trainer',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/8_Persuasion 101.png" id="8_Persuasion 101" data-flag="@X" onclick="openSidebar('8_Persuasion 101',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/22_Theorios Overachiever.png" id="22_Theorios Overachiever" data-flag="@X" onclick="openSidebar('22_Theorios Overachiever',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/36_The Third Gauntlet.png" id="36_The Third Gauntlet" data-flag="@X" onclick="openSidebar('36_The Third Gauntlet',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/54_Sonorous Sculptor.png" id="54_Sonorous Sculptor" data-flag="@X" onclick="openSidebar('54_Sonorous Sculptor',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/61_Infuse with the Elements.png" id="61_Infuse with the Elements" data-flag="@X" onclick="openSidebar('61_Infuse with the Elements',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/10_Reinvigorating Boost.png" id="10_Reinvigorating Boost" data-flag="@X" onclick="openSidebar('10_Reinvigorating Boost',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/13_Brilliant Spectrum.png" id="13_Brilliant Spectrum" data-flag="@X" onclick="openSidebar('13_Brilliant Spectrum',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/27_Break the Compact.png" id="27_Break the Compact" data-flag="@X" onclick="openSidebar('27_Break the Compact',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/55_Tobias Wood.png" id="55_Tobias Wood" data-flag="@X" onclick="openSidebar('55_Tobias Wood',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/63_Sylvan Gastronomy.png" id="63_Sylvan Gastronomy" data-flag="@X" onclick="openSidebar('63_Sylvan Gastronomy',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/11_Seal Away.png" id="11_Seal Away" data-flag="@X" onclick="openSidebar('11_Seal Away',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/15_Defy Gravity.png" id="15_Defy Gravity" data-flag="@X" onclick="openSidebar('15_Defy Gravity',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/29_Exploiting the Foolish.png" id="29_Exploiting the Foolish" data-flag="@X" onclick="openSidebar('29_Exploiting the Foolish',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/39_Collective Strike.png" id="39_Collective Strike" data-flag="@X" onclick="openSidebar('39_Collective Strike',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/64_Theoretical Biology.png" id="64_Theoretical Biology" data-flag="@X" onclick="openSidebar('64_Theoretical Biology',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/3_Divining Doctor.png" id="3_Divining Doctor" data-flag="@X" onclick="openSidebar('3_Divining Doctor',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/17_Experimental Mistmage.png" id="17_Experimental Mistmage" data-flag="@X" onclick="openSidebar('17_Experimental Mistmage',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/30_Grave Historian.png" id="30_Grave Historian" data-flag="@X" onclick="openSidebar('30_Grave Historian',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/40_The First Gauntlet.png" id="40_The First Gauntlet" data-flag="@X" onclick="openSidebar('40_The First Gauntlet',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/58_Campus Cook.png" id="58_Campus Cook" data-flag="@X" onclick="openSidebar('58_Campus Cook',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/5_Inspiring Verse.png" id="5_Inspiring Verse" data-flag="@X" onclick="openSidebar('5_Inspiring Verse',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/18_Friendly Researcher.png" id="18_Friendly Researcher" data-flag="@X" onclick="openSidebar('18_Friendly Researcher',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/35_Screaming Scourge.png" id="35_Screaming Scourge" data-flag="@X" onclick="openSidebar('35_Screaming Scourge',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/41_Forged Replica.png" id="41_Forged Replica" data-flag="@X" onclick="openSidebar('41_Forged Replica',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/65_Umple Earthsinger.png" id="65_Umple Earthsinger" data-flag="@X" onclick="openSidebar('65_Umple Earthsinger',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/9_Rallying Roar.png" id="9_Rallying Roar" data-flag="@X" onclick="openSidebar('9_Rallying Roar',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/20_Skyboon Sweep.png" id="20_Skyboon Sweep" data-flag="@X" onclick="openSidebar('20_Skyboon Sweep',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/37_Tragic Termination.png" id="37_Tragic Termination" data-flag="@X" onclick="openSidebar('37_Tragic Termination',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/44_Kaleidoscorch.png" id="44_Kaleidoscorch" data-flag="@X" onclick="openSidebar('44_Kaleidoscorch',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/12_Zealous Lawmage.png" id="12_Zealous Lawmage" data-flag="@X" onclick="openSidebar('12_Zealous Lawmage',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/24_Warped Skybird.png" id="24_Warped Skybird" data-flag="@X" onclick="openSidebar('24_Warped Skybird',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/38_Wicked Weakness.png" id="38_Wicked Weakness" data-flag="@X" onclick="openSidebar('38_Wicked Weakness',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/49_Pyrinspir Hammer.png" id="49_Pyrinspir Hammer" data-flag="@X" onclick="openSidebar('49_Pyrinspir Hammer',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/28_Cunning Demagogue.png" id="28_Cunning Demagogue" data-flag="@X" onclick="openSidebar('28_Cunning Demagogue',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/51_Pyrinsprir Weaponsmith.png" id="51_Pyrinsprir Weaponsmith" data-flag="@X" onclick="openSidebar('51_Pyrinsprir Weaponsmith',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/32_Merciless Defence.png" id="32_Merciless Defence" data-flag="@X" onclick="openSidebar('32_Merciless Defence',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/53_Quick Thinking.png" id="53_Quick Thinking" data-flag="@X" onclick="openSidebar('53_Quick Thinking',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/56_Workshopping the Essay.png" id="56_Workshopping the Essay" data-flag="@X" onclick="openSidebar('56_Workshopping the Essay',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/42_Go for the Goal.png" id="42_Go for the Goal" data-flag="@X" onclick="openSidebar('42_Go for the Goal',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/46_Malifors's Whisper.png" id="46_Maliforss Whisper" data-flag="@N" onclick="openSidebar('46_Maliforss Whisper',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/47_Nimble Ballerina.png" id="47_Nimble Ballerina" data-flag="@X" onclick="openSidebar('47_Nimble Ballerina',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/74_The Final Gauntlet.png" id="74_The Final Gauntlet" data-flag="@X" onclick="openSidebar('74_The Final Gauntlet',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/71_Elliott, Ambitious Archivist.png" id="71_Elliott, Ambitious Archivist" data-flag="@X" onclick="openSidebar('71_Elliott, Ambitious Archivist',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/81_Wrecking Ball.png" id="81_Wrecking Ball" data-flag="@X" onclick="openSidebar('81_Wrecking Ball',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/75_Hull Breach.png" id="75_Hull Breach" data-flag="@X" onclick="openSidebar('75_Hull Breach',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/76_Join the Dance.png" id="76_Join the Dance" data-flag="@X" onclick="openSidebar('76_Join the Dance',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/73_Faithful Mending.png" id="73_Faithful Mending" data-flag="@X" onclick="openSidebar('73_Faithful Mending',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/80_Thought Erasure.png" id="80_Thought Erasure" data-flag="@X" onclick="openSidebar('80_Thought Erasure',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/72_Exhilarating Elocution.png" id="72_Exhilarating Elocution" data-flag="@X" onclick="openSidebar('72_Exhilarating Elocution',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/69_Deadly Brew.png" id="69_Deadly Brew" data-flag="@X" onclick="openSidebar('69_Deadly Brew',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/67_Applied Biomancy.png" id="67_Applied Biomancy" data-flag="@X" onclick="openSidebar('67_Applied Biomancy',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/68_Arthur, Best of the Houses.png" id="68_Arthur, Best of the Houses" data-flag="@X" onclick="openSidebar('68_Arthur, Best of the Houses',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/79_Surgeball All-Star.png" id="79_Surgeball All-Star" data-flag="@X" onclick="openSidebar('79_Surgeball All-Star',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/70_Electrolyze.png" id="70_Electrolyze" data-flag="@X" onclick="openSidebar('70_Electrolyze',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/77_Lightning Helix.png" id="77_Lightning Helix" data-flag="@X" onclick="openSidebar('77_Lightning Helix',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/78_Malifors, the Malignant.png" id="78_Malifors, the Malignant" data-flag="@X" onclick="openSidebar('78_Malifors, the Malignant',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/82_The Stalwart Spirit.png" id="82_The Stalwart Spirit" data-flag="@X" onclick="openSidebar('82_The Stalwart Spirit',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/83_Stalwart Leystone.png" id="83_Stalwart Leystone" data-flag="@X" onclick="openSidebar('83_Stalwart Leystone',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/84_Tournament Trophy.png" id="84_Tournament Trophy" data-flag="@X" onclick="openSidebar('84_Tournament Trophy',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/97_Paxaeus Village.png" id="97_Paxaeus Village" data-flag="@X" onclick="openSidebar('97_Paxaeus Village',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/99_Theorios Archives.png" id="99_Theorios Archives" data-flag="@X" onclick="openSidebar('99_Theorios Archives',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/96_Nyxhaum Hall.png" id="96_Nyxhaum Hall" data-flag="@X" onclick="openSidebar('96_Nyxhaum Hall',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/98_Pyrinspir Workshop.png" id="98_Pyrinspir Workshop" data-flag="@X" onclick="openSidebar('98_Pyrinspir Workshop',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/100_Veridance Fortress.png" id="100_Veridance Fortress" data-flag="@X" onclick="openSidebar('100_Veridance Fortress',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/87_Monument to Composition.png" id="87_Monument to Composition" data-flag="@X" onclick="openSidebar('87_Monument to Composition',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/86_Monument to Aspiration.png" id="86_Monument to Aspiration" data-flag="@X" onclick="openSidebar('86_Monument to Aspiration',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/94_Monument to Invention.png" id="94_Monument to Invention" data-flag="@X" onclick="openSidebar('94_Monument to Invention',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/92_Monument to Foundation.png" id="92_Monument to Foundation" data-flag="@X" onclick="openSidebar('92_Monument to Foundation',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/88_Monument to Cooperation.png" id="88_Monument to Cooperation" data-flag="@X" onclick="openSidebar('88_Monument to Cooperation',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/95_Monument to Persuasion.png" id="95_Monument to Persuasion" data-flag="@X" onclick="openSidebar('95_Monument to Persuasion',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/89_Monument to Determination.png" id="89_Monument to Determination" data-flag="@X" onclick="openSidebar('89_Monument to Determination',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/91_Monument to Evolution.png" id="91_Monument to Evolution" data-flag="@X" onclick="openSidebar('91_Monument to Evolution',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/93_Monument to Inspiration.png" id="93_Monument to Inspiration" data-flag="@X" onclick="openSidebar('93_Monument to Inspiration',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/90_Monument to Elocution.png" id="90_Monument to Elocution" data-flag="@X" onclick="openSidebar('90_Monument to Elocution',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/img/er.png" id="er" data-flag="@E" onclick="openSidebar('er',false)"></div>
+			<div class="container"><img alt="/sets/BFF-files/img/85_Compact Crossing.png" id="85_Compact Crossing" data-flag="@X" onclick="openSidebar('85_Compact Crossing',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+			<div class="container"><img alt="/img/e.png" id="e" data-flag="@E" onclick="openSidebar('e',false)"></div>
+	</div>
+</div>
+	<div class="sidebar" id="sidebar">
+		<div class="sidebar-container">
+			<img id="sidebar_img" class="sidebar-img" src="/img/er.png">
+			<img id="sidebar_h_img" class="sidebar-h-img">
+			<button class="flip-btn" id="sidebar-flip-btn" onclick="imgFlip('sidebar_img')"></button>
+		</div>
+		<button class="close-btn" onclick="closeSidebar()"></button>
+	</div>
+	<div class="footer"></div>
+
+	<script>
+	const delay = ms => new Promise(res => setTimeout(res, ms));
+		let specialchars = "";
+
+	document.addEventListener('DOMContentLoaded', async function() {
+		await fetch('/lists/all-cards.json')
+					.then(response => response.json())
+					.then(json => {
+						card_list = json;
+				}).catch(error => console.error('Error:', error));
+
+				await fetch('/resources/replacechars.txt')
+					.then(response => response.text())
+					.then(text => {
+						specialchars = text; 
+				}).catch(error => console.error('Error:', error));
+
+				card_list_arrayified = card_list.cards;
+
+		preloadImgs = document.getElementsByClassName('preload-hidden');
+		
+		let images_loaded = [];
+
+		do {
+			await delay(100);
+			images_loaded = []
+			for (const img of preloadImgs)
+			{
+				images_loaded.push(isImageOk(img));
+			}
+		}
+		while (images_loaded.includes(false));
+
+		
+		loadImages();
+	});
+
+	function isImageOk(img) {
+		if (!img.complete || img.naturalWidth == 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	function loadImages() {
+		const images = document.querySelectorAll('.grid-container img');
+
+		images.forEach(img => {
+			const flag = img.getAttribute('data-flag');
+
+			if (flag === '@N') {
+				img.src = '/img/card_back.png';
+				img.removeAttribute("onclick");
+				img.style.cursor = 'default';
+			}
+			else
+			{
+				img.src = img.alt;
+
+				if (flag === '@E') {
+					img.removeAttribute("onclick");
+					img.style.cursor = 'default';
+				}
+			}
+
+			img.style.visibility = 'visible';
+		});
+	}
+
+	window.addEventListener('resize', function(event) {
+		setSidebarTop();
+	}, true);
+
+	function setSidebarTop() {
+		let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+		let sh = document.getElementById('sidebar').offsetHeight;
+		let height = 100 * ((vh - sh) / 2) / vh;
+		document.getElementById('sidebar').style.top = height + '%';
+	}
+
+	let horizontal = false;
+
+	function imgFlip(num) {
+		tmp = document.getElementById(num).src;
+		console.log(num);
+		document.getElementById(num).src = document.getElementById(num).dataset.alt_src;
+		document.getElementById(num).dataset.alt_src = tmp;
+
+		if (num == 'sidebar_img')
+		{
+			const rotated_img = document.getElementById('sidebar_h_img');
+			const sidebar_img = document.getElementById('sidebar_img');
+
+			if (horizontal && rotated_img.style.display == 'none')
+			{
+				rotated_img.style.display = "block";
+				sidebar_img.style.filter = "blur(2px) brightness(0.7)";
+			}
+			else
+			{
+				rotated_img.style.display = "none";
+				sidebar_img.style.filter = "";
+			}
+		}
+	}
+
+	function openSidebar(id, h = false) {
+		horizontal = h;
+		scroll_pct = window.scrollY / document.documentElement.scrollHeight;
+		
+		document.getElementById('sidebar').style.display = 'grid';
+
+		const rotated_img = document.getElementById('sidebar_h_img');
+		const sidebar_img = document.getElementById('sidebar_img');
+
+		sidebar_img.src = document.getElementById(id).src;
+		rotated_img.src = document.getElementById(id).src.replace("_back", "_front");
+
+		if (horizontal && sidebar_img.src.includes("_front"))
+		{
+			rotated_img.style.display = "block";
+			sidebar_img.style.filter = "blur(2px) brightness(0.7)";
+		}
+		else
+		{
+			rotated_img.style.display = "none";
+			sidebar_img.style.filter = "";
+		}
+
+		if (document.getElementById(id).dataset.alt_src)
+		{
+			document.getElementById('sidebar_img').dataset.alt_src = document.getElementById(id).dataset.alt_src;
+			document.getElementById('sidebar-flip-btn').style.display = 'block';
+		}
+		else
+		{
+			delete document.getElementById('sidebar_img').dataset.alt_src;
+			document.getElementById('sidebar-flip-btn').style.display = 'none';
+		}
+		document.getElementById('main-content').style.width = '60%';
+		
+		scroll_pos = scroll_pct * document.documentElement.scrollHeight;
+		window.scrollTo(window.scrollX, scroll_pos);
+		setSidebarTop();
+	}
+
+	function closeSidebar() {
+		scroll_pct = window.scrollY / document.documentElement.scrollHeight;
+
+		document.getElementById('sidebar').style.display = 'none';
+		document.getElementById('main-content').style.width = '100%';
+		
+
+		scroll_pos = scroll_pct * document.documentElement.scrollHeight;
+		window.scrollTo(window.scrollX, scroll_pos);
+	}
+
+	document.getElementById("search").addEventListener("keypress", function(event) {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			search();
+		}
+	});
+
+	function search() {
+		const url = new URL('search', window.location.origin);
+		url.searchParams.append('search', document.getElementById("search").value);
+		window.location.href = url;
+	}
+
+		function randomCard() {
+				let i = Math.floor(Math.random() * (card_list_arrayified.length + 1));
+				let random_card = card_list_arrayified[i];
+
+				const url = new URL('card', window.location.origin);
+				const params = {
+					set: random_card.set,
+					num: random_card.number,
+					name: random_card.card_name
+				}
+				for (const key in params) {
+					url.searchParams.append(key, params[key]);
+				}
+
+				window.location.href = url;
+			}
+	</script>
+</body>
+</html>
