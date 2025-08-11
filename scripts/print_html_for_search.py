@@ -14,6 +14,7 @@ def generateHTML(codes):
 	<link rel="icon" type="image/x-icon" href="/img/search.png">
 	<link rel="stylesheet" href="resources/mana.css">
 	<link rel="stylesheet" href="/resources/header.css">
+	<link rel="stylesheet" href="/resources/card-text.css">
 </head>
 <style>
 	@font-face {
@@ -147,30 +148,6 @@ def generateHTML(codes):
 		min-height: 75%;
 		margin-top: 3%;
 	}
-	.card-text div {
-		white-space: normal;
-		font-size: 15px;
-		padding-bottom: 10px;
-		padding-left: 12px;
-		padding-right: 12px;
-		line-height: 155%;
-	}
-	.card-text .name-cost {
-		font-weight: bold;
-		font-size: 20px;
-		white-space: pre-wrap;
-	}
-	.card-text .type {
-		font-size: 16px;
-	}
-	.card-text .pt {
-		font-weight: bold;
-	}
-	.card-text br {
-		content: "";
-		display: block;
-		margin-bottom: 5px;
-	}
 	.img-container {
 		position: relative;
 		width: 100%;
@@ -279,7 +256,7 @@ def generateHTML(codes):
 			// refresh page values
 			const params = new URLSearchParams(window.location.search);
 			page = params.get("page") ? params.get("page") : 0;
-			document.getElementById("search").value = decodeURIComponent(params.get("search"));
+			document.getElementById("search").value = params.get("search") ? decodeURIComponent(params.get("search")) : "";
 
 			if (sessionStorage.getItem("sortMethod"))
 			{
@@ -382,12 +359,17 @@ def generateHTML(codes):
 			cardGrid.innerHTML = "";
 
 			for (const card of card_list_arrayified) {
-				if (card.shape.includes("token") && !searchTerms.includes("*t:token") && !searchTerms.includes("t:token"))
+				if (card.shape.includes("token") && !searchTerms.includes("+t:token") && !searchTerms.includes("t:token"))
 				{
 					continue;
 				}
 
-				if (card.type.includes("Basic") && !searchTerms.includes("*t:basic") && !searchTerms.includes("t:basic"))
+				if (card.type.includes("Basic") && !searchTerms.includes("+t:basic") && !searchTerms.includes("t:basic"))
+				{
+					continue;
+				}
+
+				if (card.rarity.includes("masterpiece") && !searchTerms.includes("+r:masterpiece") && !searchTerms.includes("+r:mp") && !searchTerms.includes("t:basic"))
 				{
 					continue;
 				}
